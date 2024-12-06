@@ -9,7 +9,48 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <div>Hello</div>
+      <div
+        style={{
+          overscrollBehavior: 'none',
+        }}
+      >
+        Hello
+        <div
+          style={{
+            height: 500,
+          }}
+        >
+          111
+        </div>
+        <div
+          style={{
+            height: 500,
+          }}
+        >
+          222
+        </div>
+        <div
+          style={{
+            height: 500,
+          }}
+        >
+          333
+        </div>
+        <div
+          style={{
+            height: 500,
+          }}
+        >
+          444
+        </div>
+        <div
+          style={{
+            height: 500,
+          }}
+        >
+          555
+        </div>
+      </div>
     </>
   );
 }

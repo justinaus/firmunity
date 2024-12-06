@@ -2,3 +2,28 @@ html,
 body {
   overscroll-behavior: none;
 }
+
+.logo {
+  font-size: 1.7rem;
+  letter-spacing: -0.5px;
+  background: linear-gradient(45deg, #ff6b6b, #4ecdc4);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  /* padding-left: 6px;
+  padding-right: 4px; */
+  background-size: 200% 200%;
+  animation: gradientAnimation 3s ease infinite;
+}
+
+@keyframes gradientAnimation {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}

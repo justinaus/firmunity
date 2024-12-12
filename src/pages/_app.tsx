@@ -5,9 +5,8 @@ import { createTheme, MantineProvider } from '@mantine/core';
 import type { AppProps } from 'next/app';
 import { SessionProvider } from 'next-auth/react';
 
+import { pretendard } from '@/assets/fonts/pretendard/pretendard';
 import AppLayout from '@/components/shared/layout/AppLayout';
-
-import { pretendard } from './fonts/pretendard/pretendard';
 
 export default function App({
   Component,

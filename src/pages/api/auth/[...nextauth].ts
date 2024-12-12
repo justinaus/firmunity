@@ -13,18 +13,6 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async jwt({ token, account }) {
-      if (account) {
-        // 로그인 성공 1번.
-        // provider, providerAccountId:
-        token.accessToken = account.access_token;
-      }
-      return token;
-    },
-    async session({ session, token }) {
-      session.accessToken = token.accessToken as string;
-      return session;
-    },
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     async signIn({ user, account, profile }) {
       if (!user.email || !account) return false;

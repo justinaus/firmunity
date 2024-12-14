@@ -1,8 +1,11 @@
 import { Post, User } from '@prisma/client';
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { getServerSession } from 'next-auth';
 
 import { prismaClient } from '@/helpers/prisma';
 import { ApiResponse, Pagination } from '@/types/\bapi';
+
+import { authOptions } from '../auth/[...nextauth]';
 
 export default async function handler(
   req: NextApiRequest,
@@ -10,16 +13,67 @@ export default async function handler(
 ) {
   switch (req.method) {
     case 'GET':
-      return handleGet(req, res);
-    // case 'POST':
-    //   return handlePost(req, res);
+      return handleGet(req as unknown as GetPostsRequest, res);
+    case 'POST':
+      return handlePost(req, res);
     default:
       return res.status(405).json({ error: { message: 'Method not allowed' } });
   }
 }
 
-async function handleGet(
+async function handlePost(
   req: NextApiRequest,
+  res: NextApiResponse<PostPostsResponse>
+) {
+  try {
+    const session = await getServerSession(req, res, authOptions);
+
+    if (!session?.user?.email) {
+      return res.status(401).json({
+        error: { message: 'Unauthorized' },
+      });
+    }
+
+    const { title, content } = req.body as PostPostsRequestBody;
+
+    if (!title || !content) {
+      return res.status(400).json({
+        error: { message: 'Title, content are required' },
+      });
+    }
+
+    await prismaClient.post.create({
+      data: {
+        title,
+        content,
+        author: {
+          connect: {
+            email: session?.user?.email,
+          },
+        },
+      },
+    });
+
+    res.status(200).json({ data: { success: true } });
+  } catch (err) {
+    console.error(err);
+    res
+      .status(500)
+      .json({ error: { message: 'An unexpected error occurred' } });
+  }
+}
+
+export type PostPostsRequestBody = {
+  title: string;
+  content: string;
+};
+
+export type PostPostsResponse = ApiResponse<{
+  success: boolean;
+}>;
+
+async function handleGet(
+  req: GetPostsRequest,
   res: NextApiResponse<GetPostsResponse>
 ) {
   try {

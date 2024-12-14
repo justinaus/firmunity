@@ -40,6 +40,7 @@ export const authOptions: NextAuthOptions = {
             email: user.email,
             name: user.name,
             image: user.image,
+            nickname: user.email,
             account: {
               create: {
                 provider: Provider.GOOGLE,

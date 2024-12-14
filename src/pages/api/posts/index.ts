@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth';
 
 import { prismaClient } from '@/helpers/prisma';
-import { ApiResponse, Pagination } from '@/types/\bapi';
+import { ApiResponse, Pagination } from '@/types/api';
 
 import { authOptions } from '../auth/[...nextauth]';
 

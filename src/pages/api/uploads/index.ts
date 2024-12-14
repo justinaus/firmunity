@@ -2,7 +2,7 @@ import { put, PutBlobResult } from '@vercel/blob';
 import type { NextApiRequest, NextApiResponse, PageConfig } from 'next';
 import { getServerSession } from 'next-auth';
 
-import { ApiResponse } from '@/types/\bapi';
+import { ApiResponse } from '@/types/api';
 
 import { authOptions } from '../auth/[...nextauth]';
 

@@ -5,13 +5,23 @@ import { prismaClient } from '@/helpers/prisma';
 import { ApiResponse, Pagination } from '@/types/\bapi';
 
 export default async function handler(
-  req: GetPostsRequest,
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
+  switch (req.method) {
+    case 'GET':
+      return handleGet(req, res);
+    // case 'POST':
+    //   return handlePost(req, res);
+    default:
+      return res.status(405).json({ error: { message: 'Method not allowed' } });
+  }
+}
+
+async function handleGet(
+  req: NextApiRequest,
   res: NextApiResponse<GetPostsResponse>
 ) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: { message: 'Method not allowed' } });
-  }
-
   try {
     const page = Number(req.query.page) || 1;
     const limit = Number(req.query.countPerPage) || 1;

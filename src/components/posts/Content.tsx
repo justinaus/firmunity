@@ -1,4 +1,7 @@
+import { ActionIcon, Affix } from '@mantine/core';
+import { IconPlus } from '@tabler/icons-react';
 import { useQuery } from '@tanstack/react-query';
+import Link from 'next/link';
 
 import { axiosInstance } from '@/helpers/axios';
 import { GetPostsResponse } from '@/pages/api/posts';
@@ -21,6 +24,27 @@ export default function Content() {
       {data?.data?.posts.map((postData) => (
         <Post key={postData.id} data={postData} />
       ))}
+      <Affix
+        position={{
+          bottom: 30,
+          left: '50%',
+        }}
+      >
+        <div
+          style={{
+            transform: 'translateX(-50%)',
+          }}
+        >
+          <ActionIcon
+            size={'xl'}
+            radius={'xl'}
+            component={Link}
+            href={`/posts/new`}
+          >
+            <IconPlus />
+          </ActionIcon>
+        </div>
+      </Affix>
     </div>
   );
 }

@@ -48,7 +48,7 @@ export default function Post({ data }: Props) {
         {data.content}
       </Text>
 
-      <Group justify="space-between" mt={'md'}>
+      <Group justify="space-between" mt={'xs'}>
         <Center>
           <Avatar src={data.author.image} size={24} radius="xl" mr="xs" />
           <Text fz="sm" inline>

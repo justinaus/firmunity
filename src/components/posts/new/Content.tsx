@@ -43,9 +43,9 @@ export default function PostNewContent() {
     },
     validate: {
       title: (value) =>
-        value.length < 2 ? 'Title must have at least 2 letters' : null,
+        value.trim().length < 2 ? 'Title must have at least 2 letters' : null,
       content: (value) =>
-        value.length < 2 ? 'Content must have at least 2 letters' : null,
+        value.trim().length < 2 ? 'Content must have at least 2 letters' : null,
     },
   });
 
@@ -53,7 +53,10 @@ export default function PostNewContent() {
     (values: FormValues) => {
       if (isPending) return;
 
-      mutate(values);
+      mutate({
+        title: values.title.trim(),
+        content: values.content.trim(),
+      });
     },
     [isPending, mutate]
   );

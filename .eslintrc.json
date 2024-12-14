@@ -1,5 +1,9 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"],
+  "extends": [
+    "next/core-web-vitals",
+    "next/typescript",
+    "plugin:@tanstack/query/recommended"
+  ],
   "plugins": ["unused-imports", "simple-import-sort"],
   "rules": {
     "unused-imports/no-unused-imports": "warn",

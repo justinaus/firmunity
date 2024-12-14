@@ -34,11 +34,11 @@ function Header({ ...rest }: Omit<AppShellHeaderProps, 'children'>) {
             <Logo />
           </Link>
           {session ? (
-            <Button size="xs" color="red" onClick={() => signOut()}>
+            <Button size="compact-xs" color="gray" onClick={() => signOut()}>
               Sign out
             </Button>
           ) : (
-            <Button size="xs" onClick={() => signIn()}>
+            <Button size="compact-xs" onClick={() => signIn()}>
               Sign in
             </Button>
           )}

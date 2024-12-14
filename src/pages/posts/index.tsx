@@ -1,16 +1,19 @@
 import Head from 'next/head';
 
+import Content from '@/components/posts/Content';
 import PageLayout from '@/components/shared/layout/PageLayout';
 
-export default function Feed() {
+export default function Posts() {
   return (
     <>
       <Head>
-        <title>Feed</title>
+        <title>Posts</title>
       </Head>
       <PageLayout>
         <PageLayout.Header />
-        <PageLayout.Main>111</PageLayout.Main>
+        <PageLayout.Main>
+          <Content />
+        </PageLayout.Main>
       </PageLayout>
     </>
   );

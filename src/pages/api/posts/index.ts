@@ -53,7 +53,7 @@ export default async function handler(
   }
 }
 
-type PostItem = Post & {
+export type PostsItem = Post & {
   author: Pick<User, 'email' | 'nickname' | 'image'>;
 };
 
@@ -65,6 +65,6 @@ export type GetPostsRequest = Omit<NextApiRequest, 'query'> & {
 };
 
 export type GetPostsResponse = ApiResponse<{
-  posts: PostItem[];
+  posts: PostsItem[];
   pagination: Pagination;
 }>;

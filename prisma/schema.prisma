@@ -42,6 +42,7 @@ model Post {
   title     String?
   content   String
   authorId  String
+  image     String?
   author    User       @relation(fields: [authorId], references: [id])
   comments  Comment[]
   reactions Reaction[]

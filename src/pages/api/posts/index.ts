@@ -34,7 +34,7 @@ async function handlePost(
       });
     }
 
-    const { title, content } = req.body as PostPostsRequestBody;
+    const { title, content, image } = req.body as PostPostsRequestBody;
 
     if (!title || !content) {
       return res.status(400).json({
@@ -46,6 +46,7 @@ async function handlePost(
       data: {
         title,
         content,
+        image,
         author: {
           connect: {
             email: session?.user?.email,
@@ -66,6 +67,7 @@ async function handlePost(
 export type PostPostsRequestBody = {
   title: string;
   content: string;
+  image?: string;
 };
 
 export type PostPostsResponse = ApiResponse<{

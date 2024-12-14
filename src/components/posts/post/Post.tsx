@@ -27,16 +27,18 @@ export default function Post({ data }: Props) {
 
   return (
     <Card withBorder={false} radius="md" p={0}>
-      <Card.Section mb={'md'}>
-        <a {...linkProps}>
-          <Image
-            // component={NextImage}
-            src="https://i.imgur.com/Cij5vdL.png"
-            height={180}
-            alt="Resident Evil Village"
-          />
-        </a>
-      </Card.Section>
+      {data.image && (
+        <Card.Section mb={'md'}>
+          <a {...linkProps}>
+            <Image
+              // component={NextImage}
+              src={data.image}
+              height={180}
+              alt="Thumbnail"
+            />
+          </a>
+        </Card.Section>
+      )}
 
       {data.title && (
         <Text fw={500} component="a" {...linkProps} mb={'xs'}>

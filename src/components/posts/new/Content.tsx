@@ -1,12 +1,25 @@
-import { Button, Group, Stack, Textarea, TextInput } from '@mantine/core';
+import {
+  ActionIcon,
+  Button,
+  FileButton,
+  Group,
+  Image,
+  Stack,
+  Textarea,
+  TextInput,
+} from '@mantine/core';
 import { useForm } from '@mantine/form';
+import { notifications } from '@mantine/notifications';
+import { IconPhoto } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
+import { PutBlobResult } from '@vercel/blob';
 import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
-import { useCallback } from 'react';
+import { useCallback, useState } from 'react';
 
 import { axiosInstance } from '@/helpers/axios';
 import { PostPostsRequestBody, PostPostsResponse } from '@/pages/api/posts';
+import { PostUploadsResponse } from '@/pages/api/uploads';
 
 type FormValues = {
   title: string;
@@ -14,17 +27,51 @@ type FormValues = {
 };
 
 export default function PostNewContent() {
+  const [blob, setBlob] = useState<PutBlobResult | null>(null);
+
+  const { mutate: mutateImageFileUpload, isPending: isPendingImageFileUpload } =
+    useMutation<AxiosResponse<PostUploadsResponse>, undefined, File>({
+      mutationFn: (file: File) => {
+        return axiosInstance.post(`/api/uploads?filename=${file.name}`, file);
+      },
+      onSuccess: async (result) => {
+        if (!result.data.data) return;
+
+        setBlob(result.data.data);
+      },
+    });
+
+  const handleFileChange = useCallback(
+    (selectedFile: File | null) => {
+      if (!selectedFile?.size) return;
+
+      if (selectedFile.size > MAX_FILE_SIZE) {
+        notifications.show({
+          color: 'red',
+          title: 'File size is too big',
+          message: `File size must be less than 5MB`,
+        });
+
+        return;
+      }
+
+      mutateImageFileUpload(selectedFile);
+    },
+    [mutateImageFileUpload]
+  );
+
   const { push } = useRouter();
 
-  const { mutate, isPending } = useMutation<
+  const { mutate: mutatePost, isPending: isPendingPost } = useMutation<
     AxiosResponse<PostPostsResponse>,
     undefined,
-    FormValues
+    PostPostsRequestBody
   >({
-    mutationFn: (values: FormValues) => {
+    mutationFn: (values: PostPostsRequestBody) => {
       return axiosInstance.post(`/api/posts`, {
         title: values.title,
         content: values.content,
+        image: values.image,
       } as PostPostsRequestBody);
     },
     onSuccess: (result) => {
@@ -51,45 +98,62 @@ export default function PostNewContent() {
 
   const handleFormSubmit = useCallback(
     (values: FormValues) => {
-      if (isPending) return;
+      if (isPendingPost) return;
+      if (isPendingImageFileUpload) return;
 
-      mutate({
+      mutatePost({
         title: values.title.trim(),
         content: values.content.trim(),
+        image: blob?.url,
       });
     },
-    [isPending, mutate]
+    [blob?.url, isPendingImageFileUpload, isPendingPost, mutatePost]
   );
 
   return (
-    <form onSubmit={form.onSubmit(handleFormSubmit)}>
-      <Stack gap={'lg'}>
-        <TextInput
-          withAsterisk
-          label="Title"
-          placeholder="Add a title"
-          key={form.key('title')}
-          {...form.getInputProps('title')}
-          disabled={isPending}
-        />
+    <Stack>
+      <form onSubmit={form.onSubmit(handleFormSubmit)}>
+        <Stack gap={'lg'}>
+          <TextInput
+            withAsterisk
+            label="Title"
+            placeholder="Add a title"
+            key={form.key('title')}
+            {...form.getInputProps('title')}
+            disabled={isPendingPost || isPendingImageFileUpload}
+          />
 
-        <Textarea
-          withAsterisk
-          label="Content"
-          placeholder="Write something..."
-          key={form.key('content')}
-          {...form.getInputProps('content')}
-          autosize
-          minRows={4}
-          disabled={isPending}
-        />
-      </Stack>
+          <Textarea
+            withAsterisk
+            label="Content"
+            placeholder="Write something..."
+            key={form.key('content')}
+            {...form.getInputProps('content')}
+            autosize
+            minRows={4}
+            disabled={isPendingPost || isPendingImageFileUpload}
+          />
+        </Stack>
 
-      <Group justify="flex-end" mt="md">
-        <Button type="submit" disabled={isPending}>
-          Submit
-        </Button>
-      </Group>
-    </form>
+        <Group justify="space-between" mt="md">
+          <FileButton onChange={handleFileChange} accept="image/png,image/jpeg">
+            {(props) => (
+              <ActionIcon size={'lg'} {...props}>
+                <IconPhoto size={20} />
+              </ActionIcon>
+            )}
+          </FileButton>
+          <Button
+            type="submit"
+            disabled={isPendingPost || isPendingImageFileUpload}
+          >
+            Submit
+          </Button>
+        </Group>
+      </form>
+      {blob && <Image radius="md" src={blob.url} alt="preview image" />}
+    </Stack>
   );
 }
+
+const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB를 bytes로 변환

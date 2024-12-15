@@ -13,7 +13,7 @@ import { notifications } from '@mantine/notifications';
 import { IconPhoto } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { PutBlobResult } from '@vercel/blob';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import imageCompression from 'browser-image-compression';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
@@ -31,7 +31,11 @@ export default function PostNewContent() {
   const [blob, setBlob] = useState<PutBlobResult | null>(null);
 
   const { mutate: mutateImageFileUpload, isPending: isPendingImageFileUpload } =
-    useMutation<AxiosResponse<PostUploadsResponse>, undefined, File>({
+    useMutation<
+      AxiosResponse<PostUploadsResponse>,
+      AxiosError<PostUploadsResponse>,
+      File
+    >({
       mutationFn: (file: File) => {
         const formData = new FormData();
         formData.append('file', file);
@@ -50,6 +54,13 @@ export default function PostNewContent() {
         if (!result.data.data) return;
 
         setBlob(result.data.data);
+      },
+      onError: (error) => {
+        notifications.show({
+          color: 'red',
+          title: 'File upload failed',
+          message: error.response?.data.error?.message,
+        });
       },
     });
 
@@ -74,6 +85,7 @@ export default function PostNewContent() {
       };
       try {
         const compressedFile = await imageCompression(selectedFile, options);
+
         // console.log(
         //   'compressedFile instanceof Blob',
         //   compressedFile instanceof Blob

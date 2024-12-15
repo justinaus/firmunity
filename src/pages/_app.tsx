@@ -25,7 +25,7 @@ export default function App({
     <SessionProvider session={session}>
       <QueryClientProvider client={queryClient}>
         <MantineProvider theme={theme}>
-          <Notifications />
+          <Notifications autoClose={6000} />
           <AppLayout className={pretendard.className}>
             <Component {...pageProps} />
           </AppLayout>

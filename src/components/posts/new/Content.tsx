@@ -157,6 +157,7 @@ export default function PostNewContent() {
       <form onSubmit={form.onSubmit(handleFormSubmit)}>
         <Stack gap={'lg'}>
           <TextInput
+            size="lg"
             withAsterisk
             label="Title"
             placeholder="Add a title"
@@ -166,6 +167,7 @@ export default function PostNewContent() {
           />
 
           <Textarea
+            size="lg"
             withAsterisk
             label="Content"
             placeholder="Write something..."

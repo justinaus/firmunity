@@ -33,7 +33,18 @@ export default function PostNewContent() {
   const { mutate: mutateImageFileUpload, isPending: isPendingImageFileUpload } =
     useMutation<AxiosResponse<PostUploadsResponse>, undefined, File>({
       mutationFn: (file: File) => {
-        return axiosInstance.post(`/api/uploads?filename=${file.name}`, file);
+        const formData = new FormData();
+        formData.append('file', file);
+
+        return axiosInstance.post(
+          `/api/uploads?filename=${file.name}`,
+          formData,
+          {
+            headers: {
+              'Content-Type': 'multipart/form-data',
+            },
+          }
+        );
       },
       onSuccess: async (result) => {
         if (!result.data.data) return;

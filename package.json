@@ -13,6 +13,7 @@
     "postinstall": "prisma generate"
   },
   "dependencies": {
+    "@google-cloud/vision": "^4.3.2",
     "@mantine/core": "^7.14.3",
     "@mantine/form": "^7.15.1",
     "@mantine/hooks": "^7.14.3",
@@ -25,6 +26,7 @@
     "axios": "^1.7.9",
     "browser-image-compression": "^2.0.2",
     "clsx": "^2.1.1",
+    "formidable": "^3.5.2",
     "next": "15.0.3",
     "next-auth": "^4.24.10",
     "normalize.css": "^8.0.1",
@@ -35,6 +37,7 @@
   },
   "devDependencies": {
     "@tanstack/eslint-plugin-query": "^5.62.1",
+    "@types/formidable": "^3.4.5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

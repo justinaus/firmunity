@@ -14,6 +14,7 @@ import { IconPhoto } from '@tabler/icons-react';
 import { useMutation } from '@tanstack/react-query';
 import { PutBlobResult } from '@vercel/blob';
 import { AxiosResponse } from 'axios';
+import imageCompression from 'browser-image-compression';
 import { useRouter } from 'next/router';
 import { useCallback, useState } from 'react';
 
@@ -42,7 +43,7 @@ export default function PostNewContent() {
     });
 
   const handleFileChange = useCallback(
-    (selectedFile: File | null) => {
+    async (selectedFile: File | null) => {
       if (!selectedFile?.size) return;
 
       if (selectedFile.size > MAX_FILE_SIZE) {
@@ -55,7 +56,25 @@ export default function PostNewContent() {
         return;
       }
 
-      mutateImageFileUpload(selectedFile);
+      const options = {
+        maxSizeMB: 0.3,
+        maxWidthOrHeight: 600,
+        useWebWorker: true,
+      };
+      try {
+        const compressedFile = await imageCompression(selectedFile, options);
+        // console.log(
+        //   'compressedFile instanceof Blob',
+        //   compressedFile instanceof Blob
+        // ); // true
+        // console.log(
+        //   `compressedFile size ${compressedFile.size / 1024 / 1024} MB`
+        // ); // smaller than maxSizeMB
+
+        await mutateImageFileUpload(compressedFile); // write your own logic
+      } catch (error) {
+        console.log(error);
+      }
     },
     [mutateImageFileUpload]
   );

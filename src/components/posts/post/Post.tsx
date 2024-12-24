@@ -5,6 +5,7 @@ import {
   Center,
   Group,
   Image,
+  Skeleton,
   Text,
   useMantineTheme,
 } from '@mantine/core';
@@ -73,3 +74,39 @@ export default function Post({ data }: Props) {
     </Card>
   );
 }
+
+function PostSkeleton() {
+  const theme = useMantineTheme();
+
+  return (
+    <Card withBorder={false} radius="md" p={0}>
+      <Card.Section mb={'md'}>
+        <Skeleton height={180} />
+      </Card.Section>
+      <Skeleton fw={500} height={20} mb={'xs'} width="60%" />
+
+      <Skeleton fz="sm" c="dimmed" height={16} mb={8} />
+      <Skeleton fz="sm" c="dimmed" height={16} mb={8} width={'40%'} />
+
+      <Group justify="space-between" mt={'xs'}>
+        <Center>
+          <Skeleton radius="xl" height={24} mr="xs" circle />
+          <Skeleton fz="sm" height={16} width={100} />
+        </Center>
+        <Group gap={8} mr={0}>
+          <ActionIcon variant="transparent">
+            <IconHeart size={16} color={theme.colors.red[6]} />
+          </ActionIcon>
+          <ActionIcon variant="transparent">
+            <IconBookmark size={16} color={theme.colors.yellow[7]} />
+          </ActionIcon>
+          <ActionIcon variant="transparent">
+            <IconShare size={16} color={theme.colors.blue[6]} />
+          </ActionIcon>
+        </Group>
+      </Group>
+    </Card>
+  );
+}
+
+Post.Skeleton = PostSkeleton;

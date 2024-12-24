@@ -1,9 +1,9 @@
-import { ActionIcon, Affix, Divider, Stack } from '@mantine/core';
+import { ActionIcon, Affix } from '@mantine/core';
 import { IconPlus } from '@tabler/icons-react';
 import {
   InfiniteData,
   QueryKey,
-  useInfiniteQuery,
+  useSuspenseInfiniteQuery,
 } from '@tanstack/react-query';
 import Link from 'next/link';
 import { Fragment, useMemo } from 'react';
@@ -12,14 +12,14 @@ import InfiniteScroll from 'react-infinite-scroll-component';
 import { axiosInstance } from '@/helpers/axios';
 import { GetPostsResponse } from '@/pages/api/posts';
 
-import Post from './post/Post';
+import PostList from './post/PostList';
 
 const COUNT_PER_PAGE = 10;
 
 export default function Content() {
   const apiPath = '/api/posts';
 
-  const { data, fetchNextPage, hasNextPage, error } = useInfiniteQuery<
+  const { data, fetchNextPage, hasNextPage, error } = useSuspenseInfiniteQuery<
     GetPostsResponse,
     undefined,
     InfiniteData<GetPostsResponse>,
@@ -68,14 +68,7 @@ export default function Content() {
         hasMore={hasNextPage}
         loader={null}
       >
-        <Stack gap={'xl'}>
-          {datas?.map((postData, index) => (
-            <Fragment key={postData.id}>
-              <Post data={postData} />
-              {index !== datas.length - 1 && <Divider size={'xs'} />}
-            </Fragment>
-          ))}
-        </Stack>
+        <PostList datas={datas} />
       </InfiniteScroll>
       <BottomButton />
     </>

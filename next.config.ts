@@ -12,6 +12,11 @@ const nextConfig: NextConfig = {
       },
     ];
   },
+  i18n: {
+    locales: ['default', 'en', 'ko'],
+    defaultLocale: 'default',
+    localeDetection: false, // 자동 리다이렉션 끄기. 미들웨어에서 처리.
+  },
 };
 
 export default nextConfig;

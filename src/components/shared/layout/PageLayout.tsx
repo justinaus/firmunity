@@ -10,9 +10,6 @@ import {
 import Link from 'next/link';
 import { signIn, signOut, useSession } from 'next-auth/react';
 
-import { useLocale } from '@/shared/LocaleProvider';
-
-// import { useLocale } from '@/hooks/useLocale';
 import Logo from '../logo/Logo';
 
 type Props = AppShellProps;
@@ -23,8 +20,6 @@ export default function PageLayout({ ...rest }: Props) {
 
 function Header({ ...rest }: Omit<AppShellHeaderProps, 'children'>) {
   const { data: session } = useSession();
-
-  const { messages } = useLocale();
 
   return (
     <AppShell.Header bd={'none'} {...rest}>
@@ -40,11 +35,11 @@ function Header({ ...rest }: Omit<AppShellHeaderProps, 'children'>) {
           </Link>
           {session ? (
             <Button size="compact-xs" color="gray" onClick={() => signOut()}>
-              {messages.common.signOut}
+              Sign out
             </Button>
           ) : (
             <Button size="compact-xs" onClick={() => signIn()}>
-              {messages.common.signIn}
+              Sign in
             </Button>
           )}
         </Flex>
